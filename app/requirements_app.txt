@@ -1,0 +1,18 @@
+streamlit
+nibabel
+numpy
+matplotlib
+nilearn
+scikit-image
+scikit-learn
+# SCT dependencies (partial list)
+ivadomed
+portalocker
+tqdm
+transforms3d
+requests
+pyyaml
+xlsxwriter
+wquantiles
+pytest_console_scripts
+totalspineseg[neuropoly]
