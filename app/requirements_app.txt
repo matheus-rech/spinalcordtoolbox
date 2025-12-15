@@ -14,5 +14,4 @@ requests
 pyyaml
 xlsxwriter
 wquantiles
-pytest_console_scripts
 totalspineseg[neuropoly]
