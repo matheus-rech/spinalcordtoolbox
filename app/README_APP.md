@@ -18,7 +18,7 @@ This is a Streamlit-based web application that integrates functionalities from t
 
 ## Installation
 
-1.  Ensure you are in the root of the workspace.
+1.  Ensure you are in the root of the `spinalcordtoolbox` repository.
 2.  Install dependencies:
     ```bash
     pip install -r app/requirements_app.txt
