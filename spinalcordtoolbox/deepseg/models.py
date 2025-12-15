@@ -14,7 +14,7 @@ import textwrap
 import shutil
 import glob
 from pathlib import Path
-from importlib.metadata import metadata
+from importlib.metadata import metadata, PackageNotFoundError
 
 from spinalcordtoolbox import download
 from spinalcordtoolbox.utils.sys import stylize, __deepseg_dir__, LazyLoader
@@ -22,6 +22,23 @@ from spinalcordtoolbox.utils.sys import stylize, __deepseg_dir__, LazyLoader
 tss_init = LazyLoader("tss_init", globals(), 'totalspineseg.init_inference')
 
 logger = logging.getLogger(__name__)
+
+# Handle missing totalspineseg metadata gracefully
+try:
+    project_urls = metadata('totalspineseg').get_all('Project-URL') or []
+    spine_urls = {
+        label: url
+        for meta in project_urls
+        if meta.startswith('Dataset')
+        for label, url in [meta.split(', ', 1)]
+    }
+except PackageNotFoundError:
+    # Log instead of failing silently so operators can see why dataset URLs are missing
+    logger.warning(
+        "totalspineseg package not found; spinal cord model dataset URLs will not be available. "
+        "Install the 'totalspineseg' package to populate spine_urls from its Project-URL metadata."
+    )
+    spine_urls = {}
 
 # List of models. The convention for model names is: (species)_(university)_(contrast)_region
 # Regions could be: sc, gm, lesion, tumor
@@ -224,8 +241,7 @@ MODELS = {
          # NB: Rather than hardcoding the URLs ourselves, use the URLs from the totalspineseg package.
          # This means that when the totalspineseg package is updated, the URLs will be too, thus triggering
          # a re-installation of the model URLs
-         "url": dict([meta.split(', ') for meta in metadata('totalspineseg').get_all('Project-URL')
-                      if meta.startswith('Dataset')]),
+         "url": spine_urls,
          "description": "Instance segmentation of vertebrae, intervertebral discs (IVDs), spinal cord, and spinal canal on multi-contrasts MRI scans.",
          "contrasts": ["any"],
          "framework": "nnunetv2",
