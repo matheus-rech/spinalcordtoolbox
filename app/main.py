@@ -3,15 +3,8 @@ import os
 import sys
 import tempfile
 import subprocess
-import shutil
-from pathlib import Path
-import nibabel as nib
-import numpy as np
 import matplotlib.pyplot as plt
 from nilearn import plotting
-
-# Add workspace to path to import spinalcordtoolbox
-sys.path.append("/workspace")
 
 try:
     from spinalcordtoolbox.deepseg.models import TASKS
@@ -24,8 +17,6 @@ try:
     import ivadomed
 except ImportError:
     st.warning("`ivadomed` is not installed. Deep learning models might fail to run. Please install it using `pip install ivadomed`.")
-
-SCT_SCRIPT_PATH = "/workspace/spinalcordtoolbox/scripts"
 
 st.set_page_config(
     page_title="SCT Clinical App",
@@ -114,13 +105,15 @@ elif page == "Segmentation":
                     output_path = os.path.join(temp_dir, output_filename)
                     
                     # Construct command
-                    # We use the python executable to run the script
-                    cmd = f"{sys.executable} {os.path.join(SCT_SCRIPT_PATH, 'sct_deepseg.py')} {selected_task} -i '{input_path}' -o '{output_path}'"
+                    # We rely on 'sct_deepseg' being available in the path (installed via pip)
+                    # or accessible via 'python -m spinalcordtoolbox.scripts.sct_deepseg' if needed.
+                    # Assuming sct_deepseg is an entry point.
+                    cmd_list = ["sct_deepseg", selected_task, "-i", input_path, "-o", output_path]
                     
                     # For some tasks we might need extra arguments, but let's stick to defaults for now
                     
                     with st.spinner("Running Deep Learning Model..."):
-                        retcode, stdout, stderr = run_command(cmd)
+                        retcode, stdout, stderr = run_command(cmd_list)
                     
                     if retcode == 0:
                         st.success("Segmentation Complete!")
