@@ -46,7 +46,7 @@ page = st.sidebar.radio("Go to", ["Home", "Segmentation", "Analysis"])
 
 def save_uploaded_file(uploaded_file, temp_dir):
     try:
-        path = os.path.join(temp_dir, uploaded_file.name)
+        path = os.path.join(temp_dir, os.path.basename(uploaded_file.name))
         with open(path, "wb") as f:
             f.write(uploaded_file.getbuffer())
         return path
