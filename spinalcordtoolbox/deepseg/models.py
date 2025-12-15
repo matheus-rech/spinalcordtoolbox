@@ -25,9 +25,14 @@ logger = logging.getLogger(__name__)
 
 # Handle missing totalspineseg metadata gracefully
 try:
-    spine_urls = dict([meta.split(', ') for meta in metadata('totalspineseg').get_all('Project-URL')
-                  if meta.startswith('Dataset')])
-except (PackageNotFoundError, AttributeError):
+    project_urls = metadata('totalspineseg').get_all('Project-URL') or []
+    spine_urls = {
+        label: url
+        for meta in project_urls
+        if meta.startswith('Dataset')
+        for label, url in [meta.split(', ', 1)]
+    }
+except PackageNotFoundError:
     spine_urls = {}
 
 # List of models. The convention for model names is: (species)_(university)_(contrast)_region
