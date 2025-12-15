@@ -54,13 +54,13 @@ def save_uploaded_file(uploaded_file, temp_dir):
         st.error(f"Error saving file: {e}")
         return None
 
-def run_command(cmd):
+def run_command(cmd_list):
     process = subprocess.Popen(
-        cmd,
+        cmd_list,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
-        shell=True
+        shell=False
     )
     stdout, stderr = process.communicate()
     return process.returncode, stdout, stderr
