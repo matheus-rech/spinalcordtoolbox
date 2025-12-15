@@ -71,6 +71,10 @@ elif page == "Segmentation":
     
     # Task Selection
     task_options = list(TASKS.keys())
+    if not task_options:
+        st.warning("No segmentation tasks available. Please ensure spinalcordtoolbox is correctly installed and configured.")
+        st.stop()
+
     # Sort tasks to put 'spinalcord' (contrast agnostic) first as it is the most general
     if 'spinalcord' in task_options:
         task_options.remove('spinalcord')
