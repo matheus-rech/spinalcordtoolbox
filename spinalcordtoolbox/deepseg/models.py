@@ -33,6 +33,11 @@ try:
         for label, url in [meta.split(', ', 1)]
     }
 except PackageNotFoundError:
+    # Log instead of failing silently so operators can see why dataset URLs are missing
+    logger.warning(
+        "totalspineseg package not found; spinal cord model dataset URLs will not be available. "
+        "Install the 'totalspineseg' package to populate spine_urls from its Project-URL metadata."
+    )
     spine_urls = {}
 
 # List of models. The convention for model names is: (species)_(university)_(contrast)_region
